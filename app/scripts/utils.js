@@ -40,7 +40,20 @@ function getUser(username) {
 
 function getRepos(username) {
     var url = API_URL + '/users/' + username + '/repos' + OAUTH;
-    return request(url);
+    return request(url).then(function(repos) {
+        return repos.map(function(value) {
+            return {
+                name: value.name,
+                created: value.created_at,
+                repoUrl: value.clone_url,
+                language: value.language,
+                size: value.size,
+                avatar: value.owner.avatar_url,
+                owner: value.owner.login,
+                readme: 'No readme found',
+            }
+        })
+    });
 }
 
 function getReadme(username, repoName) {
@@ -49,8 +62,12 @@ function getReadme(username, repoName) {
 }
 
 function getOrgs(org) {
-    var url = API_URL + '/orgs/' + username + '/members' + OAUTH;
-    return request(url);
+    var url = API_URL + '/orgs/' + org + '/members' + OAUTH;
+    return request(url).then(function(members) {
+        return members.map(function(member) {
+            return {username: member.login};
+        });
+    });
 }
 
 var API = {
