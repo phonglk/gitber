@@ -9,19 +9,22 @@ var app = angular
     .factory('actions', actions)
     .controller('UserSearchCtrl', UserSearchCtrl)
     .controller('RecentSearchCtrl', RecentSearchCtrl)
+    .controller('UserBioCtrl', UserBioCtrl)
     ;
 
 // shared actions
 function actions(user, recentSearches) {
     return {
-        searchUser: function(username) {
+        searchUser: function(username, $apply) {
             recentSearches.addSearch(username);
             user.setUsername(username);
             API.getUser(username)
-                .then(function(user){
-                    user.setBio(user);
+                .then(function(data){
+                    user.setBio(data);
+                    $apply();
                 })
-                .catch(function() {
+                .catch(function(e) {
+                    console.log(e);
                     user.setBio({});
                 });
         }
@@ -36,12 +39,12 @@ function user() {
         bio: {},
     };
 
-    model.setUsername = function(username) {
-        model.username = username;
+    model.setUsername = function (_username) {
+        model.username = _username;
     }
 
-    model.setBio = function (bio) {
-        angular.extend(model.bio, bio);
+    model.setBio = function (_bio) {
+        model.bio = _bio;
     }
 
     return model;
@@ -76,20 +79,49 @@ function recentSearches() {
 function UserSearchCtrl($scope, user, actions) {
     $scope.username = user.username;
     $scope.search = function (e) {
-        actions.searchUser($scope.username);
+        actions.searchUser($scope.username, $scope.$apply);
         e.preventDefault();
     }
+
+    $scope.$watch(
+        function () { return user.username; },
+        function (newVal) {
+            if (newVal !== $scope.username) {
+                $scope.username = newVal;
+            }
+        },
+    true);
 }
 
 function RecentSearchCtrl($scope, recentSearches, actions) {
     $scope.searches = recentSearches.searches;
-    $scope.remove = recentSearches.remove;
-    $scope.search = function (search) {
-        actions.searchUser(seacrh);
+    $scope.remove = function(search, e) {
+        recentSearches.remove(search);
+        e.preventDefault();
+    };
+    $scope.search = function (search, e) {
+        actions.searchUser(search, $scope.$apply);
+        e.preventDefault();
     }
 }
 
 // RecentSearchCtrl
 // OrgsSearchCtrl
 // UserBioCtrl
+function UserBioCtrl($scope, user) {
+    $scope.user = user.bio;
+
+    $scope.$watch(
+        function () {
+            console.log(user.bio, user.username)
+            return user.bio;
+        },
+        function (newVal) {
+            if (newVal !== $scope.user) {
+                console.log(newVal);
+                $scope.user = newVal;
+            }
+        },
+    true);
+}
 // UserReposCtrl
