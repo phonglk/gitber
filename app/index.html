@@ -38,14 +38,11 @@
                                 <button class="btn btn-info" ng-click="search($event)">Go!</button>
                             </div>
                             <p style="padding:5px 10px; border-bottom:1px solid #ccc;" class="lead blue">Recent Searches</p>
-                            <ul class="unstyled recentSearches table-striped">
-                                 <script type="text/x-handlebars">
-                                {{#each App.recentUsersController.reverse}}
-                                    <li>
-                                        <a href="#" title="view again" {{action "searchAgain" target="App.recentUsersController"}}>{{this}}</a>  <a class="btn btn-info btn-mini pull-right" href="#" title="remove" {{action "removeUser" target="App.recentUsersController"}}>X</a>
-                                    </li>
-                                {{/each}}
-                                </script>
+                            <ul class="unstyled recentSearches table-striped" ng-controller="RecentSearchCtrl">
+                                <li ng-repeat="username in searches">
+                                    <a href="#" title="view again" ng-click="search(username)">{{ username }}</a>
+                                    <a class="btn btn-info btn-mini pull-right" href="#" title="remove" ng-click="remove(username)">X</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
