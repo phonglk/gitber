@@ -1,7 +1,7 @@
 // API Section
 var CLIENT='69af424226e15a6396dd';
 var SECRET='683d05837403207f247939ab21668065352b65db';
-var OAUTH = '?client_id='+client+'&client_secret='+secret;
+var OAUTH = '?client_id='+CLIENT+'&client_secret='+SECRET;
 
 var API_URL = 'https://api.github.com';
 
@@ -20,7 +20,22 @@ function request(url) {
 
 function getUser(username) {
     var url = API_URL + '/users/' + username + OAUTH;
-    return request(url);
+    return request(url).then(function(value){
+        return {
+            username: value.login,
+            avatar: value.avatar_url,
+            name: value.name,
+            company: value.company,
+            blog: value.blog,
+            location: value.location,
+            email: value.email,
+            hireable: value.hireable,
+            bio: value.bio,
+            repos: value.public_repos,
+            followers: value.followers,
+            joined: value.created_at
+        }
+    });
 }
 
 function getRepos(username) {
@@ -38,7 +53,7 @@ function getOrgs(org) {
     return request(url);
 }
 
-window.API = {
+var API = {
     getUser: getUser,
     getRepos: getRepos,
     getReadme: getReadme,

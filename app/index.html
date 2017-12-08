@@ -33,11 +33,9 @@
 				<div>
                     <div class="row-fluid" >
                         <div class="searched white">
-                            <div class="input-append" style="margin-top:15px; padding-left:10px;">
-                                <script type="text/x-handlebars">
-                                {{view App.SearchTextField placeholder="Github username" valueBinding="App.reposController.username" class="span8"}}
-                                <button class="btn btn-info" {{action "loadrepos" target="App.reposController"}}>Go!</button>
-                                </script>
+                            <div ng-controller="UserSearchCtrl" class="input-append" style="margin-top:15px; padding-left:10px;">
+                                <input type="text" placeholder="Github username" class="span8" ng-model="username">
+                                <button class="btn btn-info" ng-click="search($event)">Go!</button>
                             </div>
                             <p style="padding:5px 10px; border-bottom:1px solid #ccc;" class="lead blue">Recent Searches</p>
                             <ul class="unstyled recentSearches table-striped">
@@ -219,6 +217,7 @@
         <script src="scripts/vendor/base64.js"></script>
         <script src="scripts/vendor/jquery.fittext.js"></script>
         <script src="scripts/vendor/forkit.js"></script>
+        <script src="scripts/utils.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/vendor/skrollr.min.js"></script>
         <script>
