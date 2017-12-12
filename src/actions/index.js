@@ -1,14 +1,14 @@
-export const USER_SEARCH_PROGRESS = 'USER_SEARCH_PROGRESS';
-export const USER_SEARCH_DONE = 'USER_SEARCH_DONE';
-export const ORGS_SEARCH_PROGRESS = 'ORGS_SEARCH_PROGRESS';
-export const ORGS_SEARCH_DONE = 'ORGS_SEARCH_DONE';
-
 import {
   getOrgs,
   getUser
 } from '../api';
 
-function searchUser(username) {
+export const USER_SEARCH_PROGRESS = 'USER_SEARCH_PROGRESS';
+export const USER_SEARCH_DONE = 'USER_SEARCH_DONE';
+export const ORGS_SEARCH_PROGRESS = 'ORGS_SEARCH_PROGRESS';
+export const ORGS_SEARCH_DONE = 'ORGS_SEARCH_DONE';
+
+export function searchUser(username) {
   return dispatch => {
     dispatch({
       type: USER_SEARCH_PROGRESS,
@@ -22,7 +22,7 @@ function searchUser(username) {
   }
 }
 
-function searchOrgs(org) {
+export function searchOrgs(org) {
   return dispatch => {
     dispatch({
       type: ORGS_SEARCH_PROGRESS

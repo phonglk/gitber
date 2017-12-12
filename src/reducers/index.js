@@ -1,13 +1,3 @@
-const defaultState = {
-  isSearchingOrg: false,
-  isSearchingUser: false,
-  username: false,
-  bio: null,
-  repos: [],
-  orgUsers: [],
-  recentSearches: [],
-}
-
 import { 
   USER_SEARCH_PROGRESS,
   USER_SEARCH_DONE,
@@ -15,7 +5,17 @@ import {
   ORGS_SEARCH_PROGRESS,
  } from '../actions';
 
-export function reducer(state = defaultState, action) {
+ const defaultState = {
+  isSearchingOrg: false,
+  isSearchingUser: false,
+  username: '',
+  bio: null,
+  repos: [],
+  orgUsers: [],
+  recentSearches: [],
+}
+
+export default function reducer(state = defaultState, action) {
   switch (action.type) {
     case USER_SEARCH_PROGRESS: return { 
       ...state,
@@ -23,7 +23,7 @@ export function reducer(state = defaultState, action) {
       username: action.payload.username,
       recentSearches: [action.payload.username]
         .concat(state.recentSearches
-          .filter(username => username != action.payload.username)
+          .filter(username => username !== action.payload.username)
         )
     }
     case USER_SEARCH_DONE: return {

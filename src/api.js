@@ -6,7 +6,7 @@ var API_URL = 'https://api.github.com';
 
 const get = url => fetch(url).then(resp => resp.json());
 
-const getUserInfo = username => request(`${API_URL}/users/${username}${OAUTH}`)
+const getUserInfo = username => get(`${API_URL}/users/${username}${OAUTH}`)
   .then(value => ({
           username: value.login,
           avatar: value.avatar_url,
@@ -23,7 +23,7 @@ const getUserInfo = username => request(`${API_URL}/users/${username}${OAUTH}`)
       })
   );
 
-const getRepos = username => request(`${API_URL}/users/${username}/repos${OAUTH}`)
+const getRepos = username => get(`${API_URL}/users/${username}/repos${OAUTH}`)
     .then(repos => repos.map(value => ({
         name: value.name,
         created: value.created_at,
@@ -37,7 +37,7 @@ const getRepos = username => request(`${API_URL}/users/${username}/repos${OAUTH}
     )
   );
 
-const getReadme = (username, repoName) => request(`${API_URL}/repos/${username}/${repoName}/readme${OAUTH}`);
+const getReadme = (username, repoName) => get(`${API_URL}/repos/${username}/${repoName}/readme${OAUTH}`);
 
 export const getUser = username => Promise.all([
   getUserInfo(username),
@@ -47,7 +47,7 @@ export const getUser = username => Promise.all([
         getReadme(username, repo.name)
           .then(data => resolve({
             ...repo,
-            readme: data.content // decode here
+            readme: window.atob(data.content)
           }))
           .catch(() => resolve(repo))
       }))
@@ -55,5 +55,5 @@ export const getUser = username => Promise.all([
 ])
   .then(([bio, repos]) => ({ bio, repos }));
 
-export const getOrgs = org => request(`${API_URL}/orgs/${org}/members${OAUTH}`)
+export const getOrgs = org => get(`${API_URL}/orgs/${org}/members${OAUTH}`)
     .then(members => members.map(member => ({username: member.login})))
